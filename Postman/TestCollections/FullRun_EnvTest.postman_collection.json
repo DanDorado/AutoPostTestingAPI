@@ -1,0 +1,570 @@
+{
+	"info": {
+		"_postman_id": "1a0b7886-88c4-4e7c-8388-b5c907ab35a8",
+		"name": "FullRun_EnvTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get1_CheckDefaults Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ada10b2f-11c9-4b42-bf48-42b3d1bcf0ce",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME should exist as the normal env variables. Thirdname should not.\", function () {\r",
+							"    var defaultuser = postman.getEnvironmentVariable('DefaultUSER')\r",
+							"    var defaultlastname = postman.getEnvironmentVariable('DefaultLASTNAME')\r",
+							"    var defaultthirdname = postman.getEnvironmentVariable('DefaultTHIRDNAME')\r",
+							"    \r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(defaultuser);\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(defaultlastname);\r",
+							"    pm.expect(jsonData.THIRDNAME).to.eql(defaultthirdname);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post1_PostNewParams",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db342cb9-a4b1-46f0-b5b5-70660eb7f8e8",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME/THIRDNAME should be changed to the posted variable.\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(\"UserSetInPost\");\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(\"LastnameSetInPost\");\r",
+							"    pm.expect(jsonData.THIRDNAME).eql(\"ThirdnameSetInPost\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}?USER={{PostUSER}}&LASTNAME={{PostLASTNAME}}&THIRDNAME={{PostTHIRDNAME}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}",
+					"query": [
+						{
+							"key": "USER",
+							"value": "{{PostUSER}}"
+						},
+						{
+							"key": "LASTNAME",
+							"value": "{{PostLASTNAME}}"
+						},
+						{
+							"key": "THIRDNAME",
+							"value": "{{PostTHIRDNAME}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get2_CheckNew",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd8edc63-74d9-4a7a-aabb-f013aba62f28",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME/THIRDNAME should exist as the previously posted variable.\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(\"UserSetInPost\");\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(\"LastnameSetInPost\");\r",
+							"    pm.expect(jsonData.THIRDNAME).eql(\"ThirdnameSetInPost\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}",
+					"query": [
+						{
+							"key": "USER",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "LASTNAME",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "THIRDNAME",
+							"value": "Test",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post2_PostOnlyUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08a85bb5-895b-409b-b7a1-86db75c5d67e",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER should be Param, others should be 'NonePosted'.\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(\"PostMissingTest\");\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(\"NonePosted\");\r",
+							"    pm.expect(jsonData.THIRDNAME).eql(\"NonePosted\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}?USER=PostMissingTest",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}",
+					"query": [
+						{
+							"key": "USER",
+							"value": "PostMissingTest"
+						},
+						{
+							"key": "LASTNAME",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "THIRDNAME",
+							"value": "Test",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del1_ClearData",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f7ca4654-9aa4-486d-a51f-04d02eb4db12",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME/THIRDNAME should be 'JustDeleted'.\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(\"JustDeleted\");\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(\"JustDeleted\");\r",
+							"    pm.expect(jsonData.THIRDNAME).eql(\"JustDeleted\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}",
+					"query": [
+						{
+							"key": "USER",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "LASTNAME",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "THIRDNAME",
+							"value": "Test",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get3_ConfirmDeleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5873c88-33c3-4504-8c9d-2bf2f143ef1a",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME/THIRDNAME should not exist as environmental variables..\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(\"NotinLocal\");\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(\"NotinLocal\");\r",
+							"    pm.expect(jsonData.THIRDNAME).eql(\"NotinLocal\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}",
+					"query": [
+						{
+							"key": "USER",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "LASTNAME",
+							"value": "Test",
+							"disabled": true
+						},
+						{
+							"key": "THIRDNAME",
+							"value": "Test",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post3_RepostDefaults",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "67eac5f9-b9dd-4727-b046-ef79f465c632",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME should exist as the normal env variables. Thirdname should not.\", function () {\r",
+							"    var defaultuser = postman.getEnvironmentVariable('DefaultUSER')\r",
+							"    var defaultlastname = postman.getEnvironmentVariable('DefaultLASTNAME')\r",
+							"    var defaultthirdname = postman.getEnvironmentVariable('DefaultTHIRDNAME')\r",
+							"    \r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(defaultuser);\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(defaultlastname);\r",
+							"    pm.expect(jsonData.THIRDNAME).to.eql(defaultthirdname);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}?USER={{DefaultUSER}}&LASTNAME={{DefaultLASTNAME}}&THIRDNAME={{DefaultTHIRDNAME}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}",
+					"query": [
+						{
+							"key": "USER",
+							"value": "{{DefaultUSER}}"
+						},
+						{
+							"key": "LASTNAME",
+							"value": "{{DefaultLASTNAME}}"
+						},
+						{
+							"key": "THIRDNAME",
+							"value": "{{DefaultTHIRDNAME}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

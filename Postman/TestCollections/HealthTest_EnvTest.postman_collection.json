@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "374af6cf-ce42-408d-adf6-93691155fa95",
+		"name": "HealthTest_EnvTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get1_BasicHealthCheck",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "89a322a1-0cf6-435e-a621-018d672168b3",
+						"exec": [
+							"// check pm\r",
+							"pm.test(\"Response is OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time should be okay\", function () {\r",
+							"    var targetTime = postman.getGlobalVariable('TargetTime')\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(Number(targetTime));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be okay to process\", function () {\r",
+							"    pm.response.to.not.be.error;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be a json\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"JSON should container USER/LASTNAME/THIRDNAME\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('USER');\r",
+							"    pm.expect(jsonData).to.have.property('LASTNAME');\r",
+							"    pm.expect(jsonData).to.have.property('THIRDNAME');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"USER/LASTNAME should exist as the normal env variables. Thirdname should not.\", function () {\r",
+							"    var defaultuser = postman.getEnvironmentVariable('DefaultUSER')\r",
+							"    var defaultlastname = postman.getEnvironmentVariable('DefaultLASTNAME')\r",
+							"    var defaultthirdname = postman.getEnvironmentVariable('DefaultTHIRDNAME')\r",
+							"    \r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.USER).to.eql(defaultuser);\r",
+							"    pm.expect(jsonData.LASTNAME).to.eql(defaultlastname);\r",
+							"    pm.expect(jsonData.THIRDNAME).to.eql(defaultthirdname);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "{{targeturl}}:{{targetport}}",
+					"host": [
+						"{{targeturl}}"
+					],
+					"port": "{{targetport}}"
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

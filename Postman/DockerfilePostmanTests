@@ -1,0 +1,14 @@
+FROM alpine:3
+
+ADD Postman /Postman
+
+WORKDIR /Postman
+
+RUN apk add --update nodejs nodejs-npm bash
+
+RUN npm install -g newman
+RUN npm install -g newman-reporter-junitfull
+
+ADD . $Type
+
+CMD ./Test.sh

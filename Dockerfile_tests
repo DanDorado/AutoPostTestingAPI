@@ -1,0 +1,36 @@
+FROM alpine:3
+
+ADD Postman /DummyTesting/Postman
+
+WORKDIR /DummyTesting/Postman
+
+RUN apk add --update nodejs nodejs-npm
+
+RUN npm install -g newman
+RUN npm install -g newman-reporter-junitfull
+
+ADD . $Type
+
+CMD if [ "$Type" = "FullRun" ] ; then \
+newman run --folder FullTest TestingMyApp.postman_collection.json --global-var TargetTime=$TargetTime -e EnvTestEnvInheritLocalPipe.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export ./junitReport.xml; \
+newman run --folder FullTest TestingMyApp.postman_collection.json --global-var TargetTime=$TargetTime -e EnvTestEnvDotEnv.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export ./junitReport.xml; \
+newman run --folder FullTest TestingMyApp.postman_collection.json --global-var TargetTime=$TargetTime -e EnvTestExplicitlySet.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export --global-var TargetTime=$TargetTime ./junitReport.xml ; \
+
+
+elif [ "$Type" = "SingleRun" ] ; then \
+newman run TestCollection/TestingMyApp.postman_collection.json --global-var TargetTime="200" -e EnvTestEnvInheritLocalPipe.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export ./junitReport.xml; \
+
+
+elif [ "$Type" = "HealthTest" ] ; then \
+newman run --folder HealthTest TestingMyApp.postman_collection.json --global-var TargetTime=$TargetTime -e EnvTestEnvInheritLocalPipe.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export ./junitReport.xml; \
+newman run --folder HealthTest TestingMyApp.postman_collection.json --global-var TargetTime=$TargetTime -e EnvTestEnvDotEnv.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export ./junitReport.xml; \
+newman run --folder HealthTest TestingMyApp.postman_collection.json --global-var TargetTime=$TargetTime -e EnvTestExplicitlySet.postman_environment.json \
+-g EnvTesting.postman_globals.json -r cli,junit --reporter-junitfull-export ./junitReport.xml ; \
+else echo "Usage: run -e 'Type = FullRun/SingleRun/HealthTest'" ; \
+fi
