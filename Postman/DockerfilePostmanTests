@@ -6,9 +6,10 @@ COPY /Postman/TestCollections/* /Postman/TestCollections/
 
 WORKDIR /Postman
 
-RUN apk add --update nodejs nodejs-npm bash
+RUN apk add --update nodejs nodejs-npm bash dos2unix
 
+RUN dos2unix Test.sh
 RUN npm install -g newman
 RUN npm install -g newman-reporter-junitfull
 
-CMD ./Test.sh
+CMD ["bash", "Test.sh"]
